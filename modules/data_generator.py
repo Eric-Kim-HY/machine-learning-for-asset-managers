@@ -243,3 +243,41 @@ def randomBlockCorr(nCols, nBlocks, random_state=None, minBlockSize=1):
     corr0 = pd.DataFrame(corr0)
 
     return corr0
+
+
+def getTestData(n_features=100, n_informative=25, n_redundant=25, n_samples=10000, random_state=0, sigmaStd=0.):
+    """
+    Generate a random dataset for a claasification problem
+    SNIPPET 6.1 Generating a Set of Informed, Redundant, and Noise Explanatory Variables
+    Args:
+        n_features:
+        n_informative:
+        n_redundant:
+        n_samples:
+        random_state:
+        sigmaStd:
+
+    Returns:
+
+    """
+    from sklearn.datasets import make_classification
+    np.random.seed(random_state)
+
+    X, y = make_classification(n_samples=n_samples,
+                               n_features=n_features - n_redundant,
+                               n_informative=n_informative,
+                               n_redundant=0,
+                               shuffle=False,
+                               random_state=random_state)
+
+    cols = ['I_' + str(i) for i in range(n_informative)]
+    cols += ['N_' + str(i) for i in range(n_features - n_informative - n_redundant)]
+
+    X, y = pd.DataFrame(X, columns=cols), pd.Series(y)
+
+    i = np.random.choice(range(n_informative), size=n_redundant)
+
+    for k, j in enumerate(i):
+        X['R_' + str(k)] = X['I_' + str(j)] + np.random.normal(size=X.shape[0]) * sigmaStd
+
+    return X, y
