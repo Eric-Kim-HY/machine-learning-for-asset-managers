@@ -1,4 +1,4 @@
-# MLAM
+# Machine Learning for Asset Managers
 Machine Learning for Asset Managers
 Snippets and it's application modules
 
